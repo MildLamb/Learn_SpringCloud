@@ -159,3 +159,23 @@ ___
   </dependency>
 </dependencies>
 ```
+- application.yml
+```yml
+server:
+  port: 8001
+
+# mybatis配置
+mybatis:
+  type-aliases-package: com.mildlamb.springcloud.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+
+# spring的配置
+spring:
+  application:
+    name: springcloud-provider-location
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource  #数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud01?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+```
