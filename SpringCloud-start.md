@@ -178,4 +178,6 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource  #数据源
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/cloud01?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: W2kindred
 ```
