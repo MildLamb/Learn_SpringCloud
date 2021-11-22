@@ -93,7 +93,8 @@
 
 </project>
 ```
-——————
+___
+- 创建一个实体类和数据库
 - 创建一个api模块
 - api模块依赖
 ```xml
@@ -105,58 +106,56 @@
     </dependency>
 </dependencies>
 ```
-- 创建一个实体类和数据库
-
-——————
+___
 - 创建一个提供者模块 provider-8001
 - 所需依赖
 ```xml
 <dependencies>
-<!-- 从springcloud-api获得实体类 -->
-<dependency>
-    <groupId>org.mildlamb</groupId>
-    <artifactId>springcloud-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
-</dependency>
-<!-- junit -->
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-</dependency>
-<!-- 数据库 -->
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-</dependency>
-<!-- 数据源 -->
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid</artifactId>
-</dependency>
-<!-- 日志门面 -->
-<dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-core</artifactId>
-</dependency>
-<!-- mybatis -->
-<dependency>
-    <groupId>org.mybatis.spring.boot</groupId>
-    <artifactId>mybatis-spring-boot-starter</artifactId>
-</dependency>
-<!-- springboot-test -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-test</artifactId>
-</dependency>
-<!-- web场景启动器 -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-<!-- jetty服务器 -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-jetty</artifactId>
-</dependency>
+  <!-- 从springcloud-api获得实体类 -->
+  <dependency>
+      <groupId>org.mildlamb</groupId>
+      <artifactId>springcloud-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+  </dependency>
+  <!-- junit -->
+  <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+  </dependency>
+  <!-- 数据库 -->
+  <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+  </dependency>
+  <!-- 数据源 -->
+  <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+  </dependency>
+  <!-- 日志门面 -->
+  <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+  </dependency>
+  <!-- mybatis -->
+  <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+  </dependency>
+  <!-- springboot-test -->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+  </dependency>
+  <!-- web场景启动器 -->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+  <!-- jetty服务器 -->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jetty</artifactId>
+  </dependency>
 </dependencies>
 ```
