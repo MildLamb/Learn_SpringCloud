@@ -169,6 +169,9 @@ mybatis:
   type-aliases-package: com.mildlamb.springcloud.pojo
   mapper-locations: classpath:mybatis/mapper/*.xml
   config-location: classpath:mybatis/mybatis-config.xml
+  # 开启驼峰命名转换
+  configuration:
+    map-underscore-to-camel-case: true
 
 # spring的配置
 spring:
@@ -180,4 +183,83 @@ spring:
     url: jdbc:mysql://localhost:3306/cloud01?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: W2kindred
+```
+- mapper.xml
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mildlamb.springcloud.mapper.LocationDao">
+    <select id="selectLocById" parameterType="int" resultType="location">
+        select * from cloud01.locations
+        <where>
+            local_id = #{lid}
+        </where>
+    </select>
+
+    <insert id="addLocation" parameterType="location">
+        insert into cloud01.locations(local_id, local_name, db_source) values (null,#{localName},#{dbSource})
+    </insert>
+
+    <select id="selectAllLoc" resultType="location">
+        select * from cloud01.locations
+    </select>
+</mapper>
+```
+- LocalDao  --Mapper
+```java
+@Mapper
+@Repository("LocationDao")
+public interface LocationDao {
+    boolean addLocation(Location location);
+
+    Location selectLocById(@Param("lid") Integer id);
+
+    List<Location> selectAllLoc();
+}
+```
+- LocalServiceImpl
+```java
+@Service
+public class LocalServiceImpl implements LocalService {
+
+    @Autowired
+    private LocationDao locationDao;
+
+    public boolean addLocation(Location location) {
+        return locationDao.addLocation(location);
+    }
+
+    public Location selectLocById(Integer id) {
+        return locationDao.selectLocById(id);
+    }
+
+    public List<Location> selectAllLoc() {
+        return locationDao.selectAllLoc();
+    }
+}
+```
+- LocalController
+```java
+@RestController
+public class LocalController {
+    @Autowired
+    private LocalService localService;
+
+    @PostMapping("/local/add")
+    public boolean addLocal(Location location){
+        return localService.addLocation(location);
+    }
+
+    @GetMapping("/local/get/{lid}")
+    public Location getLocalById(@PathVariable("lid") Integer localId){
+        return localService.selectLocById(localId);
+    }
+
+    @GetMapping("/local/get")
+    public List<Location> getLocals(){
+        return localService.selectAllLoc();
+    }
+}
 ```
