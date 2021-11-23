@@ -107,7 +107,7 @@ ___
 </dependencies>
 ```
 ___
-- 创建一个提供者模块 provider-8001
+# 创建一个提供者模块 provider-8001
 - 所需依赖
 ```xml
 <dependencies>
@@ -261,5 +261,63 @@ public class LocalController {
     public List<Location> getLocals(){
         return localService.selectAllLoc();
     }
+}
+```
+# 服务消费者模块
+- 依赖
+```xml
+<!-- 实体类 -->
+<dependency>
+  <groupId>org.mildlamb</groupId>
+  <artifactId>springcloud-api</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+<!-- web -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+- 使用RestTemplate通过http获取服务
+- 注册RestTemplate
+```java
+@Configuration
+public class ConfigBean {
+    @Bean
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+}
+```
+- Controller
+```java
+@RestController
+public class LocalController {
+    //理解：消费者，不应该有service层~
+    //RestTemplate
+    //restTemplate.xxxForObject：通过某种请求方式获取对象  由于消费者不应该有service，在这里就是通过请求的方式获取生产者提供的对象
+    //(url,responseType)  url:请求的地址  responseType：返回值类型
+    // 其他参数  get请求的请求参数以地址形式传输  post以参数类型传输 postForObject(url,request,responseType)
+    @Autowired
+    private RestTemplate restTemplate;  //提供多种便捷访问远程http服务的方法，简单的Restful服务模板
+
+    private static final String REST_UTL_PREFIX = "http://localhost:8001";
+
+    @RequestMapping("/customer/local/get/{lid}")
+    public Location getLocal(@PathVariable("lid") Integer id){
+        return restTemplate.getForObject(REST_UTL_PREFIX + "/local/get/" + id,Location.class);
+    }
+
+
+    @RequestMapping("/customer/local/all")
+    public List<Location> getLocals(){
+        return restTemplate.getForObject(REST_UTL_PREFIX + "/local/get",List.class);
+    }
+
+    @RequestMapping("/customer/local/add")
+    public boolean add(Location location){
+        return restTemplate.postForObject(REST_UTL_PREFIX + "/local/add",location,Boolean.class);
+    }
+
 }
 ```
