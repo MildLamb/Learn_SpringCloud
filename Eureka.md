@@ -144,9 +144,11 @@ server:
 # Eureka配置
 eureka:
   instance:
-    hostname: localhost7001  # Eureka服务端的实例名称
+    hostname: eureka7001  # Eureka服务端的实例名称
   client:
-    register-with-eureka: false  # 表示是否向eureka注册中心注册自己，注册中心不需要注册自己
+    # 当我们设置服务为注册中心时，需要关闭eureka.client.fetch-registry与eureka.client.register-with-eureka，
+    # 在做注册中心集群的时候，register-with-eureka必须打开，因为需要进行相互注册，不然副本无法可用
+    register-with-eureka: true  # 表示是否向eureka注册中心注册自己，注册中心不需要注册自己
     fetch-registry: false # fetch-registry如果为false，则表示自己为注册中心
     service-url:  # 服务监控页面
       # 单机：defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
