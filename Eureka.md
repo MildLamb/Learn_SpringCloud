@@ -5,3 +5,8 @@
   - Eureka包含两个组件：Eureka Server和Eureka Client
   - Eureka Server提供服务注册，各个节点启动后，会在EurekaServer中进行注册，这样Eureka Server中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观的看到
   - Eureka Client是一个Java客户端，用于简化EurekaServer的交互，客户端同时也具备一个内置的，使用轮询负载算法的负载均衡器。在启动应用后，将会向EurekaServer发送心跳(默认周期为30s)。如果Eureka Server在多个心跳周期内没有接收到某个节点的心跳，EurekaServer将会从服务注册表中把这个服务节点移除掉(默认周期为90s)
+
+- 三大角色
+  - Eureka Server：提供服务注册与发现
+  - Service Provider：将自身服务注册到Eureka中，从而使消费方能够找到
+  - Service Consumer：服务消费方从Eureka中获取注册服务列表，从而找到消费服务
