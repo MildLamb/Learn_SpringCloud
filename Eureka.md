@@ -59,11 +59,13 @@ public class EurekaServer_7001 {
 ```
 - application.yml中添加额外配置
 ```yml
-# Eureka配置，
+# Eureka配置
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:7001/eureka/  # Eureka注册中心的注册地址
+  instance:
+    instance-id: 8001 is springcloud-provider   # 修改注册到Eureka后的默认描述
 ```
 - 启动类添加额外注解@EnableEurekaClient
 ```java
