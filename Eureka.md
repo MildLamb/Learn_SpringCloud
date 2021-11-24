@@ -59,13 +59,33 @@ public class EurekaServer_7001 {
 ```
 - application.yml中添加额外配置
 ```yml
-# Eureka配置
+# Eureka配置，
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:7001/eureka/  # Eureka注册中心的注册地址
   instance:
     instance-id: 8001 is springcloud-provider   # 修改注册到Eureka后的默认描述
+#    # 配置使用主机名注册服务
+#    hostname: node1
+#    # 优先使用IP地址方式进行注册服务
+#    prefer-ip-address: true
+#    # 配置使用指定IP
+#    ip-address: 127.0.0.1
+
+
+# 新版的actuator还是新版的springboot默认连/info都不开放了好像，所以要开启/info的访问
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# 需要actuator依赖
+# 完善监控信息
+info:
+  app.name: MildLamb-SpringCloud
+  company.name: Wild-Wolf
 ```
 - 启动类添加额外注解@EnableEurekaClient
 ```java
