@@ -10,3 +10,41 @@
   - Eureka Server：提供服务注册与发现
   - Service Provider：将自身服务注册到Eureka中，从而使消费方能够找到
   - Service Consumer：服务消费方从Eureka中获取注册服务列表，从而找到消费服务
+
+
+# 配置Eureka Server
+- 导入依赖
+```xml
+  <!-- 导入Eureka包 -->
+  <dependencies>
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+      </dependency>
+  </dependencies>
+```
+- 编写配置application.yml
+```yml
+server:
+  port: 7001
+
+# Eureka配置
+eureka:
+  instance:
+    hostname: localhost  # Eureka服务端的实例名称
+  client:
+    register-with-eureka: false  # 表示是否向eureka注册中心注册自己，注册中心不需要注册自己
+    fetch-registry: false # fetch-registry如果为false，则表示自己为注册中心
+    service-url:  # 服务监控页面
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+```
+- 编写主启动类，开启EurekaServer服务
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServer_7001 {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServer_7001.class,args);
+    }
+}
+```
