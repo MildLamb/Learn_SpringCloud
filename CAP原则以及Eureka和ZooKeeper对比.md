@@ -5,8 +5,7 @@
 
 最多只能实现两点，不可能三个都有
 
-# Eureka和ZooKeeper对比
-## Eureka和Zookeeper对比  
+# Eureka和ZooKeeper对比  
 作为服务注册中心，Eureka比zookeeper好在哪里?   
 著名的CAP理论指出，一个分布式系统不可能同时满足C(一致性)、A (可用性)、P(容错性)。由于分区容错性P在分布式系统中是必须要保证的，因此我们只能在A和C之间进行权衡。  
 - Zookeeper保证的是CP;
