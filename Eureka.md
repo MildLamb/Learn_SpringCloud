@@ -125,3 +125,40 @@ public Object discovery(){
     return this.client;
 }
 ```
+# 搭建伪Eureka集群
+- 创建eureka-7002和eureka-7003 和 7001一样
+- 使7001，7002，7003产生关联
+- 这里需要修改一下系统的hosts文件来伪实现一下 C:\Windows\System32\drivers\etc
+- 由于是系统文件，我们直接打开是无法修改的
+  1. 来到C:\Windows\System32\drivers\etc，点击左上角文件，以管理员身份运行PowerShell
+  2. 输入cmd
+  3. 输入notepad hosts
+  4. 接下来就可以修改hosts文件了
+  5. 多复制几个127.0.0.1  后面写名字
+  6. 保存
+- 在eureka server的yml配置文件中绑定其他集群成员
+```yml
+server:
+  port: 7001
+
+# Eureka配置
+eureka:
+  instance:
+    hostname: localhost7001  # Eureka服务端的实例名称
+  client:
+    register-with-eureka: false  # 表示是否向eureka注册中心注册自己，注册中心不需要注册自己
+    fetch-registry: false # fetch-registry如果为false，则表示自己为注册中心
+    service-url:  # 服务监控页面
+      # 单机：defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      # defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/  #提供者提供服务 来注册的地址
+      # 集群需要关联其他集群成员
+      defaultZone: http://eureka7002:7002/eureka/,http://eureka7003:7003/eureka/
+```
+- 服务提供者，向集群注册服务
+```yml
+# Eureka配置，
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7002:7002/eureka/,http://eureka7001:7001/eureka/,http://eureka7003:7003/eureka/
+```
