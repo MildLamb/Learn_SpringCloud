@@ -48,3 +48,30 @@ public class EurekaServer_7001 {
     }
 }
 ```
+# 将provider-8001配置为服务提供者，向Eureke注册中心注册
+- 导入额外依赖
+```xml
+<!-- Eureka Client -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+- application.yml中添加额外配置
+```yml
+# Eureka配置，
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/  # Eureka注册中心的注册地址
+```
+- 启动类添加额外注解@EnableEurekaClient
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class LocalProvider_8001 {
+    public static void main(String[] args) {
+        SpringApplication.run(LocalProvider_8001.class,args);
+    }
+}
+```
