@@ -97,3 +97,31 @@ public class LocalProvider_8001 {
     }
 }
 ```
+## 如果想在类中获取一些注册的微服务的信息可以这样
+- 注入一个类 org.springframework.cloud.client.discovery.DiscoveryClient 这个包下的DiscoveryClient接口
+```java
+//这个接口可以获取到一些信息，得到具体的微服务
+    @Autowired
+    private DiscoveryClient client;
+```
+- 获取你想要的微服务信息
+```java
+//注册进去的微服务，获取一些信息
+@GetMapping("/local/discover")
+public Object discovery(){
+    //获取微服务列表的清单
+    List<String> services = client.getServices();
+    System.out.println("Discovery ==> services:" + services);
+
+    //得到一个具体的微服务信息
+    List<ServiceInstance> instances = client.getInstances("springcloud-provider-location");  //这个getInstances参数是你配置的spring.application.name的值
+    for (ServiceInstance instance : instances) {
+        System.out.println(instance.getHost() + "\t" +
+                instance.getPort() + "\t" +
+                instance.getUri() + "\t" +
+                instance.getServiceId());
+    }
+
+    return this.client;
+}
+```
