@@ -19,15 +19,17 @@
       - Ribbon就属于进程内LB，它只是一个类库，集成于消费方进程，消费方通过它来获取到服务提供方的地址
 
 # Ribbon使用
-- 客户端80导入额外依赖
+- 客户端80导入额外依赖(eureka3.0以上的版本包含ribbon，再导ribbon会导致jar包冲突)
 ```xml
 <!-- Ribbon客户端的负载均衡工具 -->
-<dependency>
+<!-- <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
     <version>2.2.9.RELEASE</version>
-</dependency>
-<!-- Eureka Client 客户端要到Eureka中获取服务 -->
+</dependency> -->
+<!-- Eureka Client 客户端要到Eureka中获取服务
+  eureka3.0以上的版本包含ribbon，再导ribbon会导致jar包冲突 
+-->
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
@@ -54,3 +56,44 @@ public class ConfigBean {
     }
 }
 ```
+- 修改Controller，默认地址改为服务名称
+```java
+@RestController
+public class LocalController {
+    //理解：消费者，不应该有service层~
+    //RestTemplate
+    //restTemplate.xxxForObject：通过某种请求方式获取对象  由于消费者不应该有service，在这里就是通过请求的方式获取生产者提供的对象
+    //(url,responseType)  url:请求的地址  responseType：返回值类型
+    // 其他参数  get请求的请求参数以地址形式传输  post以参数类型传输 postForObject(url,request,responseType)
+    @Autowired
+    private RestTemplate restTemplate;  //提供多种便捷访问远程http服务的方法，简单的Restful服务模板
+
+    //使用Ribbon的时候，路径不应该写死了，这个地址应该是一个变量，通过服务的id去查找
+//    private static final String REST_UTL_PREFIX = "http://localhost:8001";
+    private static final String REST_UTL_PREFIX = "http://SPRINGCLOUD-PROVIDER-LOCATION";
+
+
+    @RequestMapping("/customer/local/get/{lid}")
+    public Location getLocal(@PathVariable("lid") Integer id){
+        return restTemplate.getForObject(REST_UTL_PREFIX + "/local/get/" + id,Location.class);
+    }
+
+
+    @RequestMapping("/customer/local/all")
+    public List<Location> getLocals(){
+        return restTemplate.getForObject(REST_UTL_PREFIX + "/local/get",List.class);
+    }
+
+    @RequestMapping("/customer/local/add")
+    public boolean add(Location location){
+        return restTemplate.postForObject(REST_UTL_PREFIX + "/local/add",location,Boolean.class);
+    }
+
+}
+```
+## 模拟负载均衡的环境
+- 复制cloud01数据库，创建cloud02，cloud03
+- 模仿提供者8001，创建8002，8003，修改对应提供者的提供数据的数据库
+- 启动注册中心，启动提供者，启动消费者访问，就可以以轮询的负载均衡算法查询数据了
+
+### 自定义负载均衡算法
