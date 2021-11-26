@@ -11,45 +11,58 @@
 - 在springcloud-api模块中添加service
 ```java
 //value：微服务的id，你要从哪个微服务拿
-@Service
+/**
+    注意这里绑定的请求地址是服务提供者提供的请求地址
+    相当于FeignClient和服务提供者进行绑定
+ */
 @FeignClient(value = "SPRINGCLOUD-PROVIDER-LOCATION")
 public interface LocationClientService {
-    @GetMapping("/customer/local/get/{lid}")
-    Location selectById(@PathVariable("lid") Integer id);
 
-    @GetMapping("/customer/local/all")
-    List<Location> selectAll();
+    @PostMapping("/local/add")
+    public boolean addLocal(Location location);
 
-    @PostMapping("/customer/local/add")
-    Boolean addLocation();
+    @GetMapping("/local/get/{lid}")
+    public Location getLocalById(@PathVariable("lid") Integer localId);
+
+    @GetMapping("/local/get")
+    public List<Location> getLocals();
 }
 ```
-- 将feign模块的controller改为接口的方法调用
+- 将feign模块的controller改为接口的方法调用,消费者的链接可以自定义
 ```java
 @RestController
 public class LocalController {
-    @Autowired
-    private RestTemplate restTemplate;  //提供多种便捷访问远程http服务的方法，简单的Restful服务模板
 
     @Autowired
-    private LocationClientService locationClientService;
+    private LocationClientService service;
 
 
-    @GetMapping("/customer/local/get/{lid}")
+    @RequestMapping("/feign/local/get/{lid}")
     public Location getLocal(@PathVariable("lid") Integer id){
-        return locationClientService.selectById(id);
+        return service.getLocalById(id);
     }
 
 
-    @GetMapping("/customer/local/all")
+    @RequestMapping("/feign/local/all")
     public List<Location> getLocals(){
-        return locationClientService.selectAll();
+        return service.getLocals();
     }
 
-    @PostMapping("/customer/local/add")
+    @RequestMapping("/feign/local/add")
     public boolean add(Location location){
-        return locationClientService.addLocation(location);
+        return service.addLocal(location);
     }
 
+}
+```
+- 启动类添加@EnableFeignClients注解
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableFeignClients
+public class FeignCustomer_80 {
+    public static void main(String[] args) {
+        SpringApplication.run(FeignCustomer_80.class,args);
+    }
 }
 ```
