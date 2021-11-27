@@ -81,10 +81,15 @@ public class LocalProvider_hystrix_8001 {
 ## 服务降级
 - springcloud-api模块中，添加一个类实现FallbackFactory接口重写create方法
 ```java
+import com.mildlamb.springcloud.pojo.Location;
+import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
 //降级
 @Component
 public class LocationClientServiceFallbackFactory implements FallbackFactory {
-    //返回值是提供的服务接口
     public LocationClientService create(Throwable cause) {
         return new LocationClientService() {
             public boolean addLocal(Location location) {
@@ -122,10 +127,22 @@ public interface LocationClientService {
     public List<Location> getLocals();
 }
 ```
+- 新版需要在feign模块(需要提供服务降级的模块)也添加hystrix依赖
+```xml
+<!-- Hystrix -->
+ <dependency>
+     <groupId>org.springframework.cloud</groupId>
+     <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+     <version>2.2.9.RELEASE</version>
+ </dependency>
+```
 - 在feign模块yml配置中中开启降级
 ```yml
 # 开启降级
 feign:
   circuitbreaker:
     enabled: true
+#hystrix:
+#  metrics:
+#    enabled: true
 ```
