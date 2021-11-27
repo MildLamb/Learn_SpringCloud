@@ -20,7 +20,13 @@ Hystrix能保证在一个依赖出问题地情况下，不会导致整体服务�
 熔断机制是对应雪崩效应的一种微服务链路保护机制。  
 当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回错误的响应信息。当检测到  
 该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败  
-的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。  
+的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。 
+
+
+### 自己理解的熔断和降级
+- 熔断：由于系统发生了某种错误，为了防止雪崩，使原本的服务采用了其他备用手段维持服务链路的正常运行
+- 降级：为了满足某个系统的高访问量，以牺牲其他服务为代价，关闭其他服务，集中处理高访问的服务
+
 
 # Hystrix使用
 ### 服务熔断
@@ -72,7 +78,47 @@ public class LocalProvider_hystrix_8001 {
     }
 }
 ```
-### 服务降级
+## 服务降级
 - springcloud-api模块中，添加一个类实现FallbackFactory接口重写create方法
 ```java
+//降级
+@Component
+public class LocationClientServiceFallbackFactory implements FallbackFactory {
+    //返回值是提供的服务接口
+    public LocationClientService create(Throwable cause) {
+        return new LocationClientService() {
+            public boolean addLocal(Location location) {
+                return false;
+            }
+
+            //降级操作，返回一个带有错误信息的需要的返回类
+            public Location getLocalById(Integer localId) {
+                Location location = new Location();
+                location.setLocalId(localId);
+                location.setLocalName("不存在该用户 @By 服务降级，该服务已被降级关闭");
+                location.setDbSource("没有该数据库  @By 服务降级，该服务已被降级关闭");
+                return location;
+            }
+
+            public List<Location> getLocals() {
+                return null;
+            }
+        };
+    }
+}
+```
+- 服务接口处，@FeignClient添加fallbackFactory属性与降级服务关联
+```java
+@FeignClient(value = "SPRINGCLOUD-PROVIDER-LOCATION",fallbackFactory = LocationClientServiceFallbackFactory.class)
+public interface LocationClientService {
+
+    @PostMapping("/local/add")
+    public boolean addLocal(Location location);
+
+    @GetMapping("/local/get/{lid}")
+    public Location getLocalById(@PathVariable("lid") Integer localId);
+
+    @GetMapping("/local/get")
+    public List<Location> getLocals();
+}
 ```
