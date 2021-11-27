@@ -23,6 +23,7 @@ Hystrix能保证在一个依赖出问题地情况下，不会导致整体服务�
 的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。  
 
 # Hystrix使用
+### 服务熔断
 - 导入依赖
 ```xml
  <!-- Hystrix -->
@@ -70,4 +71,8 @@ public class LocalProvider_hystrix_8001 {
         SpringApplication.run(LocalProvider_hystrix_8001.class,args);
     }
 }
+```
+### 服务降级
+- springcloud-api模块中，添加一个类实现FallbackFactory接口重写create方法
+```java
 ```
