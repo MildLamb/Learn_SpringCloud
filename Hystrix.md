@@ -122,3 +122,10 @@ public interface LocationClientService {
     public List<Location> getLocals();
 }
 ```
+- 在feign模块yml配置中中开启降级
+```yml
+# 开启降级
+feign:
+  circuitbreaker:
+    enabled: true
+```
