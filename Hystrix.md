@@ -21,3 +21,53 @@ Hystrix能保证在一个依赖出问题地情况下，不会导致整体服务�
 当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务的降级，进而熔断该节点微服务的调用，快速返回错误的响应信息。当检测到  
 该节点微服务调用响应正常后恢复调用链路。在SpringCloud框架里熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败  
 的调用到一定阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。  
+
+# Hystrix使用
+- 导入依赖
+```xml
+ <!-- Hystrix -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    <version>2.2.9.RELEASE</version>
+</dependency>
+```
+- 修改controller方法，使方法出现异常后，调用备用方案
+```java
+@RestController
+public class LocalController {
+    @Autowired
+    private LocalService localService;
+
+    @GetMapping("/local/get/{lid}")
+    @HystrixCommand(fallbackMethod = "hystrixGetLocation")
+    public Location getLocation(@PathVariable("lid") Integer id){
+        Location location = localService.selectLocById(id);
+        if (location == null){
+            throw new RuntimeException("id => " + id + "不存在该用户");
+        }
+        return location;
+    }
+
+    // 我们想出现异常后调用备选方案
+    public Location hystrixGetLocation(Integer id){
+        Location location = new Location();
+        location.setLocalId(id);
+        location.setLocalName("不存在该用户 @By Hystrix");
+        location.setDbSource("没有该数据库  @By Hystrix");
+        return location;
+    }
+}
+```
+- 启动类开启熔断支持
+```java
+@SpringBootApplication
+@EnableEurekaClient  //在服务启动后自动注册到Eureka中
+@EnableDiscoveryClient  //服务发现
+@EnableHystrix
+public class LocalProvider_hystrix_8001 {
+    public static void main(String[] args) {
+        SpringApplication.run(LocalProvider_hystrix_8001.class,args);
+    }
+}
+```
