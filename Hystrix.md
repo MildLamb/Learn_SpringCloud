@@ -147,7 +147,7 @@ feign:
 #    enabled: true
 ```
 ## Hystrix监控页面dashboard使用
-- 导入依赖
+- hystrix dashboard客户端导入依赖
 ```xml
 <!-- hystrix监控页面依赖 -->
   <dependency>
@@ -162,6 +162,16 @@ feign:
       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
       <version>2.2.9.RELEASE</version>
   </dependency>
+```
+- application.yml
+```yml
+server:
+  port: 9001
+
+# hystrix监控页面不添加这个就一直loading
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "*"
 ```
 - 启动类开启支持 
 ```java
@@ -181,7 +191,7 @@ public class LocalConsumerDashboard_9001 {
     <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
 ```
-- 服务提供者还需要提供一个servlet,这里是写在了启动类下面
+- 服务提供者还需要提供一个servlet,这里是写在了启动类下面(访问的接口方法上要加@HystrixCommand 注解，hystrix-dashboard只会监控有@HystrixCommand注解的接口)
 ```java
 public ServletRegistrationBean registrationBean(){
         ServletRegistrationBean registrationBean = new ServletRegistrationBean(new HystrixMetricsStreamServlet());
