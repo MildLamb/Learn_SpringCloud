@@ -146,3 +146,47 @@ feign:
 #  metrics:
 #    enabled: true
 ```
+## Hystrix监控页面dashboard使用
+- 导入依赖
+```xml
+<!-- hystrix监控页面依赖 -->
+  <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+      <version>2.2.9.RELEASE</version>
+  </dependency>
+
+  <!-- Hystrix -->
+  <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+      <version>2.2.9.RELEASE</version>
+  </dependency>
+```
+- 启动类开启支持 
+```java
+@SpringBootApplication
+@EnableHystrixDashboard
+public class LocalConsumerDashboard_9001 {
+    public static void main(String[] args) {
+        SpringApplication.run(LocalConsumerDashboard_9001.class,args);
+    }
+}
+```
+- 要求服务的提供者要有监控的依赖
+```xml
+<!-- 提供额外的监控信息 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+- 服务提供者还需要提供一个servlet,这里是写在了启动类下面
+```java
+public ServletRegistrationBean registrationBean(){
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new HystrixMetricsStreamServlet());
+        //这个路径是固定的
+        registrationBean.addUrlMappings("/actuator/hystrix.stream");
+        return registrationBean;
+    }
+```
