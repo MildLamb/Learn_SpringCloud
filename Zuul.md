@@ -81,6 +81,8 @@ zuul:
   routes:
     mylocation.serviceId: springcloud-provider-location
     mylocation.path: /mylocation/**
+  # 不允许通过服务名去访问服务，只能用上面自定义的路径去访问
+  ignored-services: springcloud-provider-location
 ```
 - 启动类开启支持
 ```java
