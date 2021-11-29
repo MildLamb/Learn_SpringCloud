@@ -75,6 +75,12 @@ eureka:
 info:
   app.name: mildlamb-springcloud-zuul
   company.name: gnardada.com
+
+# Zuul配置
+zuul:
+  routes:
+    mylocation.serviceId: springcloud-provider-location
+    mylocation.path: /mylocation/**
 ```
 - 启动类开启支持
 ```java
