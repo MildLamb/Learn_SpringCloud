@@ -17,6 +17,7 @@
 工具来方便的管理和访问配置内容。
 
 ## springcloud-config使用
+### 服务端
 - 导入依赖
 ```xml
 <dependencies>
@@ -39,4 +40,25 @@
 ```
 - 编写配置
 ```yml
+server:
+  port: 3344
+spring:
+  application:
+    name: springcloud-config-server
+  # 连接远程仓库
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/MildLamb/Learn_Git_Config.git
+```
+- 启动类开启支持
+```java
+@SpringBootApplication
+@EnableConfigServer
+public class Config_Server_3344 {
+    public static void main(String[] args) {
+        SpringApplication.run(Config_Server_3344.class,args);
+    }
+}
 ```
