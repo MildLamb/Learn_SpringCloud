@@ -77,3 +77,66 @@ public class Config_Server_3344 {
   - 例如我们的远程配置可以这样访问
     - http://localhost:3344/application/test/main
     - http://localhost:3344/application-dev.yml
+
+### 客户端
+- 导入依赖
+```xml
+<dependencies>
+    <!-- config-client -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+    <!-- web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+```
+- 编写两个配置文件 bootstrap.yml和application.yml
+```yml
+# 系统级别的配置
+spring:
+  cloud:
+    config:
+      uri: http://localhost:3344
+      name: config-client   # 需要通过git读取的资源名称，不需要加后缀
+      profile: dev  # 需要获取哪种生产环境
+      label: main  # 从哪一个分支拿
+```
+```yml
+# 用户级别的配置
+spring:
+  application:
+    name: springcloud-config-client-3355
+```
+- 编写一个controller来获取远程的配置
+```java
+@RestController
+public class ConfigClientController {
+    // 注入的位置来自远程github上的配置文件
+    @Value("${spring.application.name}")
+    private String applicationName;
+    @Value("${eureka.client.service-url.defaultZone}")
+    private String eurekaServer;
+    @Value("${server.port}")
+    private String port;
+
+    @RequestMapping("/config")
+    public String MyConfig(){
+        return "application-name:" + applicationName + "\r\n" +
+                "server-url:" + eurekaServer + "\r\n" +
+                "server-port:"  + port;
+    }
+}
+```
+- 启动类测试
+```java
+@SpringBootApplication
+public class Config_Client_3355 {
+    public static void main(String[] args) {
+        SpringApplication.run(Config_Client_3355.class,args);
+    }
+}
+```
