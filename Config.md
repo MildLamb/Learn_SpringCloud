@@ -140,6 +140,10 @@ public class Config_Client_3355 {
     }
 }
 ```
+
+## 流程
+config客户端  -->  config服务端  -->  github远程配置文件
+
 ### 测试出现的一些问题  
 SpringCloud 2020.0.2版本的配置中心的客户端报No spring.config.import property has been defined  
 在springcloud 2020.0.2版本中把bootstrap的相关依赖从spring-cloud-starter-config中移除了，导致报错.
