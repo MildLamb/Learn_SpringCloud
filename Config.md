@@ -65,3 +65,15 @@ public class Config_Server_3344 {
     }
 }
 ```
+- 访问远程配置
+  - 官网提供了多种访问的方式
+```bash
+/{application}/{profile}[/{label}]
+/{application}-{profile}.yml
+/{label}/{application}-{profile}.yml
+/{application}-{profile}.properties
+/{label}/{application}-{profile}.propertie
+```
+  - 例如我们的远程配置可以这样访问
+    - http://localhost:3344/application/test/main
+    - http://localhost:3344/application-dev.yml
