@@ -38,7 +38,7 @@
     </dependency>
 </dependencies>
 ```
-- 编写配置
+- 编写配置(连接github的配置，要求提供用户名和密码)
 ```yml
 server:
   port: 3344
@@ -51,6 +51,9 @@ spring:
       server:
         git:
           uri: https://github.com/MildLamb/Learn_Git_Config.git
+          username: 1902524390@qq.com
+          password: W2kindred
+        default-label: main
 ```
 - 启动类开启支持
 ```java
