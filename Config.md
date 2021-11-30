@@ -140,3 +140,15 @@ public class Config_Client_3355 {
     }
 }
 ```
+### 测试出现的一些问题  
+SpringCloud 2020.0.2版本的配置中心的客户端报No spring.config.import property has been defined  
+在springcloud 2020.0.2版本中把bootstrap的相关依赖从spring-cloud-starter-config中移除了，导致报错.
+解决方案：  
+- 添加bootstrap依赖
+```xml
+<!-- bootstrap.yml -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+```
