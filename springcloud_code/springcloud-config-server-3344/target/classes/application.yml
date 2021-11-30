@@ -1,0 +1,50 @@
+server:
+  port: 3344
+spring:
+  application:
+    name: springcloud-config-server
+  # 连接远程仓库
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/MildLamb/Learn_Git_Config.git
+          username: 1902524390@qq.com
+          password: W2kindred
+        default-label: main
+
+
+
+
+
+
+
+
+
+# 官网的例子
+#spring:
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: https://example.com/my/repo
+#          timeout: 4
+
+# ============================================
+
+#spring:
+#  profiles:
+#    active: composite
+#  cloud:
+#    config:
+#      server:
+#        composite:
+#          -
+#            type: svn
+#            uri: file:///path/to/svn/repo
+#          -
+#            type: git
+#            uri: file:///path/to/rex/git/repo
+#          -
+#            type: git
+#            uri: file:///path/to/walter/git/rep

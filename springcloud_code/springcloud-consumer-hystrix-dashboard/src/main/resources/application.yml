@@ -1,0 +1,7 @@
+server:
+  port: 9001
+
+# hystrix监控页面不添加这个就一直loading
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "*"

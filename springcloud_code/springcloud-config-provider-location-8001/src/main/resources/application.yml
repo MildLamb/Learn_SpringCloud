@@ -1,0 +1,4 @@
+# spring的配置
+spring:
+  application:
+    name: springcloud-config-provider-location
