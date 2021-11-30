@@ -1,0 +1,48 @@
+server:
+  port: 8002
+
+# mybatis配置
+mybatis:
+  type-aliases-package: com.mildlamb.springcloud.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+#  config-location: classpath:mybatis/mybatis-config.xml
+  # 开启驼峰命名转换
+  configuration:
+    map-underscore-to-camel-case: true
+
+# spring的配置
+spring:
+  application:
+    name: springcloud-provider-location
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource  #数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cloud02?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: W2kindred
+
+# Eureka配置，
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7002:7002/eureka/,http://eureka7001:7001/eureka/,http://eureka7003:7003/eureka/  # Eureka注册中心的注册地址
+  instance:
+    instance-id: 8002 is springcloud-provider   # 修改注册到Eureka后的默认描述
+#    # 配置使用主机名注册服务
+#    hostname: node1
+#    # 优先使用IP地址方式进行注册服务
+#    prefer-ip-address: true
+#    # 配置使用指定IP
+#    ip-address: 127.0.0.1
+
+
+# 需要actuator依赖
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+info:
+  app.name: MildLamb-SpringCloud
+  company.name: Wild-Wolf

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mildlamb.springcloud.mapper.LocationDao">
+    <select id="selectLocById" parameterType="int" resultType="location">
+        select * from cloud03.locations
+        <where>
+            local_id = #{lid}
+        </where>
+    </select>
+
+    <insert id="addLocation" parameterType="location">
+        insert into cloud03.locations(local_id, local_name, db_source) values (null,#{localName},#{dbSource})
+    </insert>
+
+    <select id="selectAllLoc" resultType="location">
+        select * from cloud03.locations
+    </select>
+</mapper>
